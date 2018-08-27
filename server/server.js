@@ -27,6 +27,8 @@ app.listen(3000, () => {
   console.log('Started on port 3000');
 })
 
+module.exports = {app}; 
+
 // Create a new Todo
 // var newTodo = new Todo({
 //   text: 'Cook dinner'
