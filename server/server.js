@@ -38,8 +38,7 @@ app.get('/todos/:id', (req, res) => {
   const id = req.params.id;
   // Check to make sure id params is valid
   if(!ObjectID.isValid(id)) {
-    res.status(404).send();
-    return console.log('ID not valid');
+    return res.status(404).send();
   }
   // Id valid - query DB for document
   Todo.findById(id).then( (todo) => {
