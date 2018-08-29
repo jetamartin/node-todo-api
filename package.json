@@ -1,6 +1,3 @@
-// Heroku mods:
-//  Must tell Heroku how to start app via start script
-//  Must tell Heroku which version of node to use
 {
   "name": "todo-api",
   "version": "1.0.0",
