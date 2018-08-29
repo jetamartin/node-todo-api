@@ -4,7 +4,8 @@ var mongoose = require('mongoose');
 mongoose.Promise = global.Promise;
 
 // Tell mongoose where to connect to MongoDb
-mongoose.connect('mongodb://localhost:27017/TodoApp');
+// For Heroku we need to tell it where to connect to MongoDB
+mongoose.connect(process.env.MONGODB_URI || 'mongodb://localhost:27017/TodoApp');
 // ES5 syntax
 // module.exports = {
 //   mongoose: mongoose

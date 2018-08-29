@@ -1,11 +1,18 @@
+// Heroku mods:
+//  Must tell Heroku how to start app via start script
+//  Must tell Heroku which version of node to use
 {
   "name": "todo-api",
   "version": "1.0.0",
   "description": "",
   "main": "index.js",
   "scripts": {
+    "start": "node server/server.js",
     "test": "mocha server/**/*.test.js",
     "test-watch": "nodemon --exec \"npm test\""
+  },
+  "engines": {
+    "node": "10.8.0"
   },
   "author": "",
   "license": "ISC",
