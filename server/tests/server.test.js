@@ -105,9 +105,9 @@ describe('GET /todos/:id', () => {
     request(app)
       .get(`/todos/${_id.toHexString()}`)
       .expect(404)
-      // .expect((res) => {
-      //   expect(res.body.todo).toNotExist();
-      // })
+      .expect((res) => {
+        expect(res.body.todo).toNotExist();
+      })
       .end(done)
   });
   it('should return 404 for non-object id', (done) => {
