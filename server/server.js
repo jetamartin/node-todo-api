@@ -1,14 +1,15 @@
+const _ = require('lodash');
 const {ObjectID} = require('mongodb');
 
-var express = require('express');
-var bodyParser = require('body-parser')
+const express = require('express');
+const bodyParser = require('body-parser')
 
 
-var {mongoose} = require('./db/mongoose');
-var {Todo} = require('./models/todo');
-var {User} = require('./models/user');
+const {mongoose} = require('./db/mongoose');
+const {Todo} = require('./models/todo');
+const {User} = require('./models/user');
 
-var app = express();
+const app = express();
 
 // Setup for Heroku -- if env variable present use it otherwise use 3000
 const port = process.env.PORT || 3000;
@@ -72,6 +73,36 @@ app.delete('/todos/:id', (req, res) => {
       return res.status(404).send()
     }
     // Document found - return todo as object with todo as attribute
+    res.send({todo});
+  }).catch((e) => {
+    res.status(400).send();
+  })
+})
+
+app.patch('/todos/:id', (req, res) => {
+  var id = req.params.id;
+  // Create object containing only things we allow user to update...
+  // so if the user sends us additonal properties (e.g., completedAt) we won't update them)
+  var body = _.pick(req.body, ['text', 'completed']);
+
+  if(!ObjectID.isValid(id)) {
+    return res.status(404).send();
+  }
+  // Update completed parameter
+  // if user marked as commpleted we nee to set completedAt
+
+  if (_.isBoolean(body.completed) && body.completed) {
+    body.completedAt = new Date().getTime();
+  // If user marked as no complete we need to clear completedAt property
+  } else {
+    body.completed = false;
+    body.completedAt = null;
+  }
+  // Set values we picked in body above, return updated record via 'new: true'
+  Todo.findByIdAndUpdate(id, {$set: body}, {new: true}).then((todo) => {
+    if(!todo) {
+      return res.status(404).send();
+    }
     res.send({todo});
   }).catch((e) => {
     res.status(400).send();
