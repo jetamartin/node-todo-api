@@ -36,7 +36,7 @@ const UserSchema = mongoose.Schema({
     }
   }]
 });
-
+// Add comments about what this is doing
 UserSchema.methods.toJSON = function () {
   var user = this;
   var userObject = user.toObject();
@@ -69,6 +69,28 @@ UserSchema.statics.findByToken = function (token) {
     '_id': decoded._id,  // which id is this????
     'tokens.token': token, // Query nested document's tokens array to search for matching token
     'tokens.access': 'auth'
+  });
+};
+// When user attempts to login we want to check if user exists in DB
+// by checking user name exist and password matches hat user name
+UserSchema.statics.findByCredentials = function (email, password) {
+  var user = this;
+  return User.findOne({email}).then((user) => {
+    if (!user) {
+      return Promise.reject();
+    }
+    return new Promise((resolve, reject) => {
+      // use bcrypt.compare to compare passwerd and user.Password
+      bcrypt.compare(password, user.password, (err, res) => {
+        if (res) {
+          resolve(user)
+        } else {
+          reject();
+        }
+      });
+    }).catch((e) => {
+      return Promse.reject(err);
+    });
   });
 };
 
