@@ -77,7 +77,7 @@ UserSchema.statics.findByCredentials = function (email, password) {
   var user = this;
   return User.findOne({email}).then((user) => {
     if (!user) {
-      return Promise.reject();
+      return Promise.reject('Email does not exist');
     }
     return new Promise((resolve, reject) => {
       // use bcrypt.compare to compare passwerd and user.Password
@@ -85,11 +85,12 @@ UserSchema.statics.findByCredentials = function (email, password) {
         if (res) {
           resolve(user)
         } else {
-          reject();
+          reject('Password entered does not match password on file');
         }
       });
-    }).catch((e) => {
-      return Promse.reject(err);
+    }).catch((err) => {
+      console.log(err)
+      return Promise.reject(err);
     });
   });
 };
