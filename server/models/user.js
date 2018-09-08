@@ -55,6 +55,21 @@ UserSchema.methods.generateAuthToken = function () {
     return token;
   });
 }
+
+UserSchema.methods.removeToken = function (token) {
+  var user = this;
+
+  return user.update({
+    // Want to remove any object from tokens array that has a property that matches
+    // the token we passed in. To do this we use a mongodb operator $pull -- removes
+    // items from array that matches certain criteria
+    $pull: {
+      // Pull from tokens array -- if token matches it removes ENTIRE object
+      tokens: {token}
+    }
+  });
+};
+
 // Note: use of statics rather than method make this function a Model method
 UserSchema.statics.findByToken = function (token) {
   var User = this; // Model is the this binding
